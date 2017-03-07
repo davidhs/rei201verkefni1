@@ -1,6 +1,5 @@
 #!/bin/bash
-mkdir -p _ignore/bundle1
-mkdir -p _ignore/bundle2
+mkdir -p _ignore
 
 curl -O https://notendur.hi.is/~pmelsted/kennsla/rei/albums.zip
 curl -O https://notendur.hi.is/~pmelsted/kennsla/rei/mnist.zip
