@@ -114,12 +114,13 @@ def get_best_bundle(paths, signature, do_filter=False):
                     least_bundle = bundle
                     least_path = path
                     uninitialized = False
-    print("Signature:", signature, ", path:", least_path)
     
     if (least_path is not None) and (len(s_paths) >= 2) and (do_filter):
         s_paths.remove(least_path)
         for path in s_paths:
-            os.remove(path)
+            # Final check
+            if os.path.exists(path):
+                os.remove(path)
     
     return least_bundle
 
