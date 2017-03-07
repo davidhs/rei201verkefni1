@@ -1,5 +1,8 @@
 # rei201verkefni1
-verkefni1
+
+
+
+
 
 Hlekkur að námskeiðinu:
 
@@ -11,6 +14,7 @@ Hlekkur að námskeiðinu:
 
 * https://notendur.hi.is/~pmelsted/kennsla/rei/albums.zip
 * https://notendur.hi.is/~pmelsted/kennsla/rei/mnist.zip
+* https://notendur.hi.is/~pmelsted/kennsla/rei/kmeans.py
 
 og sprengja skrárnar.  Einnig þarf að búa til möppuna `_ignore`.
 
