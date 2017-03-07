@@ -9,7 +9,7 @@ import kmeans # Staðbundin skrá, fyrir k-means
 import math # Stærðfræði
 import glob # Notað til að finna skrár.
 
-
+import os
 
 ################################################################################
 # Innlestur og teikning.
@@ -94,24 +94,32 @@ def load_bundle(path):
     return np.load(path)
 
 
-def get_best_bundle(paths, signature):
+def get_best_bundle(paths, signature, do_filter=False):
     least_loss = -1
     least_bundle = None
-    least_path = ""
+    least_path = None
     uninitialized = True
+    s_paths = []
     for path in paths:
-        arr = np.load(path)
-        bundle = arr.item()['bundle']
-        bundle_signature = bundle['signature']
-        losses = bundle['losses']
-        if signature == bundle_signature:
-            loss = losses[-1]
-            if uninitialized or loss < least_loss:
-                least_loss = loss
-                least_bundle = bundle
-                least_path = path
-                uninitialized = False
+        if os.path.exists(path):
+            arr = np.load(path)
+            bundle = arr.item()['bundle']
+            bundle_signature = bundle['signature']
+            losses = bundle['losses']
+            if signature == bundle_signature:
+                s_paths += [path]
+                loss = losses[-1]
+                if uninitialized or loss < least_loss:
+                    least_loss = loss
+                    least_bundle = bundle
+                    least_path = path
+                    uninitialized = False
     print("Signature:", signature, ", path:", least_path)
+    
+    if (least_path is not None) and (len(s_paths) >= 2) and (do_filter):
+        s_paths.remove(least_path)
+        for path in s_paths:
+            os.remove(path)
     
     return least_bundle
 
@@ -163,27 +171,40 @@ def f2(images, image_labels, centroids, labels, losses):
 # Búa til gögn
 
 
-def generate_data_part1(albums, k=3, out_dir="_ignore/bundle1/"):
+def generate_data_part1(albums):
     print("Hluti 1")
     for i, album in enumerate(albums):
         print("Mynd", i + 1, "af", len(albums))
-        signature = str(i)
-        bundle = create_bundle(album, k, get_kmeans_1, signature)
-        save_bundle(out_dir, bundle)
+        bundle = create_bundle(album, 3, get_kmeans_1, str(i))
+        save_bundle("_ignore/", bundle)
         print("    Tími:", bundle["duration"])
     print()
 
 
-def generate_data_part2(images, k_list=[10, 20, 30], out_dir="_ignore/bundle2/"):
+def generate_data_part2(images):
     # Hluti 2
     print("Hluti 2")
-    for i, k in enumerate(k_list):
+    for i, k in enumerate([10, 20, 30]):
         print("k =", k, ",", i + 1, "af", 3)
-        signature = str(k)
-        bundle = create_bundle(images, k, get_kmeans_2, signature)
-        save_bundle(out_dir, bundle)
+        bundle = create_bundle(images, k, get_kmeans_2, str(k))
+        save_bundle("_ignore/", bundle)
         print("    Tími:", bundle["duration"])
     print()
+
+
+def save_bundle(path, bundle):
+    if path[-1] != '/':
+        path += '/'
+    the_date = datetime.datetime.now()
+    the_date_string = the_date.strftime("%y-%m-%d-%H%M%S.%f")
+    filename = path + "bundle-" + the_date_string + ".npy"
+    payload = np.array({
+        "filename": filename,
+        "dateString": the_date_string,
+        "bundle": bundle
+    })
+    np.save(filename, payload)
+
 
 ################################################################################
 # DRASL

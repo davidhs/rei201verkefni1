@@ -16,4 +16,10 @@ B_labels = np.load("mnist/B_labels.npy")
 # Búum hér sífellt til bundle og vistum út í skrá
 while True:
     generate_data_part1(albums)
+    for i in range(len(albums)):
+        get_best_bundle(glob.glob('_ignore/bundle-*.npy'), str(i), do_filter=True)
     generate_data_part2(A_images)
+    get_best_bundle(glob.glob('_ignore/bundle-*.npy'), "10", do_filter=True)
+    get_best_bundle(glob.glob('_ignore/bundle-*.npy'), "20", do_filter=True)
+    get_best_bundle(glob.glob('_ignore/bundle-*.npy'), "30", do_filter=True)
+
