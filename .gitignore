@@ -2,6 +2,7 @@
 
 mnist/
 albums/
+_ignore/
 
 
 # Byte-compiled / optimized / DLL files
