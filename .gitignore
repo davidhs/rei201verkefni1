@@ -4,6 +4,10 @@ mnist/
 albums/
 _ignore/
 
+albums.zip
+mnist.zip
+verk1.pdf
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
