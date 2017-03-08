@@ -47,6 +47,8 @@ def get_kmeans_1(arr, k=1):
         c2 = np.reshape(c2, (1,) + c2.shape)
     return (c2, l, J)
 
+def get_kmeans_2_forward_reshape(arr):
+    return arr.reshape(arr.shape[0], -1).transpose()
 
 # k-means fyrir seinni hlutan.  Tekur inn myndasafnið.
 def get_kmeans_2(arr, k=1):
