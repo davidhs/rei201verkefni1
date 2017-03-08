@@ -169,28 +169,33 @@ def f2(images, image_labels, centroids, labels, losses):
                 break
         print()
 
+################################################################################
+# Talnagreining
+
+
+
 
 ################################################################################
 # Búa til gögn
 
 
-def generate_data_part1(albums):
+def generate_data_part1(albums, out_dir="_ignore/"):
     print("Hluti 1")
     for i, album in enumerate(albums):
         print("Mynd", i + 1, "af", len(albums))
         bundle = create_bundle(album, 3, get_kmeans_1, str(i))
-        save_bundle("_ignore/", bundle)
+        save_bundle(out_dir, bundle)
         print("    Tími:", bundle["duration"])
     print()
 
 
-def generate_data_part2(images):
+def generate_data_part2(images, out_dir="_ignore/"):
     # Hluti 2
     print("Hluti 2")
     for i, k in enumerate([10, 20, 30]):
         print("k =", k, ",", i + 1, "af", 3)
         bundle = create_bundle(images, k, get_kmeans_2, str(k))
-        save_bundle("_ignore/", bundle)
+        save_bundle(out_dir, bundle)
         print("    Tími:", bundle["duration"])
     print()
 
