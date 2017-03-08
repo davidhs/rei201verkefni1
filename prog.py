@@ -24,6 +24,8 @@ def load_image_as_arr(path):
     return arr
 
 
+
+
 # Birtir NumPY fylkið `arr' sem mynd.
 def display_arr(arr, cast_to_uint8=True):
     if cast_to_uint8:
@@ -172,14 +174,69 @@ def f2(images, image_labels, centroids, labels, losses):
 ################################################################################
 # Talnagreining
 
+# stat[centroid][top_result][digit, ratio]
+def label_suggestions(images, image_labels, centroids, labels, losses, get_sorted=True):
+    stat = []
+    for _ in centroids:
+        sub = []
+        for i in range(len(centroids)):
+            sub += [[i, 0]]
+        stat += [sub]
+    
+    for i, label in enumerate(labels):
+        value = int(image_labels[i])
+        stat[label][value][1] += 1
+        #print(label, value)
+        
+    for i, it in enumerate(stat):
+        n = sum([x[1] for x in it])
+        stat[i] = sorted(it, key=lambda x: -x[1])
+        for j in range(len(stat[i])):
+            stat[i][j][1] /= n
+            
+    return stat
 
+
+
+# x and y are vectors
+def get_distance(x, y):
+    u = x - y
+    return np.dot(u,u)
+
+
+def classifier_factory(images, image_labels, centroids, labels, losses):
+    suggestions = label_suggestions(images, image_labels, centroids, labels, losses)
+    
+    #print(suggestions)
+    def classifier(image, display_best=False, metric=get_distance, breakdown=False):
+        vimage = image.reshape(-1)
+        
+        distances = []
+        
+        for i, centroid in enumerate(centroids):
+            vcentroid = centroid.reshape(-1)
+            distance = metric(vimage, vcentroid)
+            distances += [[i, distance]]
+            
+        
+        distances = sorted(distances, key=lambda x: x[1])
+        
+        least_index = distances[0][0]
+        maxed_digit = suggestions[least_index][0][0]
+        
+        digit = maxed_digit
+        
+        return digit
+    return classifier
 
 
 ################################################################################
 # Búa til gögn
 
 
-def generate_data_part1(albums, out_dir="_ignore/"):
+def generate_data_part1(albums, out_dir):
+    if not os.path.isdir(out_dir):
+        raise FileNotFoundError('Directory does not exist:', out_dir)
     print("Hluti 1")
     for i, album in enumerate(albums):
         print("Mynd", i + 1, "af", len(albums))
@@ -189,7 +246,9 @@ def generate_data_part1(albums, out_dir="_ignore/"):
     print()
 
 
-def generate_data_part2(images, out_dir="_ignore/"):
+def generate_data_part2(images, out_dir):
+    if not os.path.isdir(out_dir):
+        raise FileNotFoundError('Directory does not exist:', out_dir)
     # Hluti 2
     print("Hluti 2")
     for i, k in enumerate([10, 20, 30]):
@@ -203,6 +262,8 @@ def generate_data_part2(images, out_dir="_ignore/"):
 def save_bundle(path, bundle):
     if path[-1] != '/':
         path += '/'
+    if not os.path.isdir(path):
+        raise FileNotFoundError('Directory does not exist:', out_dir)
     the_date = datetime.datetime.now()
     the_date_string = the_date.strftime("%y-%m-%d-%H%M%S.%f")
     filename = path + "bundle-" + the_date_string + ".npy"
