@@ -35,3 +35,8 @@ Niðurstöðunar vistast í möppuna `_ignore`.  Reglulega eru skrárnar í `_ig
 ### Windows
 
 Ábyggilega best að nota Jupyter hér, annars veit ég ekki.
+
+## Bestu gögn
+
+Bestu gögn sem myndast fara af og til í möppuna `bundles`.
+
