@@ -175,7 +175,7 @@ def f2(images, image_labels, centroids, labels, losses):
 # Talnagreining
 
 # stat[centroid][top_result][digit, ratio]
-def label_suggestions(images, image_labels, centroids, labels, losses, get_sorted=True):
+def label_suggestions(images, image_labels, centroids, labels, losses):
     stat = []
     for _ in centroids:
         sub = []
@@ -295,6 +295,16 @@ def gzf(arr, k):
     # Teikna fjölda ítrana
     plt.plot(range(0, len(losses)), losses)
     plt.show()
+
+def testzzz(idx, bundle, images, labels):
+    classifier = classifier_factory(A_images, A_labels, bundle['centroids'], bundle['labels'], bundle['losses'])
+    label = int(labels[idx][0])
+    display_arr(images[idx])
+    print("Actual:", label)
+    digit = classifier(images[idx], display_best=True, breakdown=True)
+    print("Got:", digit)
+
+
 
 ################################################################################
 
